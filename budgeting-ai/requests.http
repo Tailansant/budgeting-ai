@@ -1,0 +1,61 @@
+### Requisições de exemplo (IntelliJ HTTP Client ou extensão REST Client do VS Code)
+@host = http://localhost:8080
+
+### 1) Criar uma transação (valor em CENTAVOS: 8000 = R$ 80,00)
+POST {{host}}/transactions
+Content-Type: application/json
+
+{
+  "description": "Compras no mercado",
+  "category": "GROCERIES",
+  "amount": 8000
+}
+
+### 2) Validação: valor zero -> 422 com a explicação em "detail"
+POST {{host}}/transactions
+Content-Type: application/json
+
+{
+  "description": "Compras no mercado",
+  "category": "GROCERIES",
+  "amount": 0
+}
+
+### 3) Listar por categoria
+GET {{host}}/transactions/GROCERIES
+
+### 4) Resumo geral (nova consulta)
+GET {{host}}/transactions/summary
+
+### 5) Resumo de uma categoria
+GET {{host}}/transactions/summary?category=PHARMA
+
+### 6) Últimas transações (nova consulta)
+GET {{host}}/transactions/latest?limit=3
+
+### 7) Assistente por TEXTO (nova rota, ótima para testar sem áudio)
+POST {{host}}/transactions/ai/text
+Content-Type: application/json
+
+{
+  "message": "Gastei 45 reais e 90 centavos na farmácia comprando remédio"
+}
+
+### 8) Assistente por TEXTO: consulta
+POST {{host}}/transactions/ai/text
+Content-Type: application/json
+
+{
+  "message": "Quanto eu já gastei no total?"
+}
+
+### 9) Assistente por VOZ: envia áudio e recebe um MP3
+POST {{host}}/transactions/ai
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="recording-1.m4a"
+Content-Type: audio/mp4
+
+< ./src/test/resources/audio/recording-1.m4a
+--boundary--
